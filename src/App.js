@@ -1,21 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
-import Header from './Header';
+import React, { useState } from 'react';
 import CategoryTabs from './CategoryTabs';
 import RecipeCardsArea from './RecipeCardsArea';
+import Header from './Header';
 import Footer from './Footer';
-import Sidebar from './Sidebar';
 
 function App() {
-  return (
-      <div className="App">
-          <Header />
-          <CategoryTabs />
-          <RecipeCardsArea />
-          <Footer />
-      </div>
-  );
+    const [currentCategory, setCurrentCategory] = useState(null);
+
+    return (
+        <div className="App">
+            <Header />
+            <CategoryTabs onCategoryChange={category => setCurrentCategory(category)} />
+            <RecipeCardsArea currentCategory={currentCategory} />
+            <Footer />
+        </div>
+    );
 }
 
-
 export default App;
+
