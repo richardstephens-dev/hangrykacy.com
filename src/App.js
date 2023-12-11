@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import Header from './Header';
 import CategoryTabs from './CategoryTabs';
-import RecipeCards from './RecipeCards';
+import RecipeCardsArea from './RecipeCardsArea';
 import Footer from './Footer';
 import Sidebar from './Sidebar';
 
@@ -11,7 +11,7 @@ function App() {
       <div className="App">
           <Header />
           <CategoryTabs />
-          <RecipeCards />
+          <RecipeCardsArea />
           <Footer />
       </div>
   );
