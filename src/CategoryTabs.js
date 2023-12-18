@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Tabs, Tab, Box } from '@mui/material';
-
-const tabCategories = ["Breakfast", "Appetizers", "Entrees", "Sides", "Desserts", "Drinks"];
+import { Tabs, Tab, Box, useTheme } from '@mui/material';
+const tabCategories = ["Breakfast", "Appetizers", "Entrees", "Sides", "Desserts", "Drinks", "James"];
 
 const CategoryTabs = ({ onCategoryChange }) => {
     const [value, setValue] = useState(false);
-
+    const theme = useTheme(); // Access the theme
     const handleChange = (event, newValue) => {
         setValue(newValue);
         onCategoryChange(tabCategories[newValue]);
@@ -15,8 +14,7 @@ const CategoryTabs = ({ onCategoryChange }) => {
         <Box sx={{ 
                 display: 'flex',
                 borderColor: 'divider',
-                backgroundColor: 'var(--background-color)',
-                alignItems: 'center',
+                backgroundColor: theme.palette.light.primary, // Use theme color                alignItems: 'center',
                 justifyContent: 'center'
             }}>
             <Tabs 
@@ -27,10 +25,10 @@ const CategoryTabs = ({ onCategoryChange }) => {
                 allowScrollButtonsMobile
                 sx={{
                     '.MuiTab-root': {
-                        fontFamily: 'Imbue, serif',  // Use your desired font
+                        fontFamily: theme.typography.primary.fontFamily,
                         fontWeight: 600,
                         fontSize: 'larger',
-                        color: 'var(--text-color)',
+                        color: theme.palette.black.primary,
                         textTransform: 'uppercase'
                     }
                 }}>
