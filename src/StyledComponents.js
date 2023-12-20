@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {useTheme} from '@mui/material';
+import { useTheme } from '@mui/material';
 
 export const StyledButton = styled.button`
     position: relative;
@@ -10,12 +10,13 @@ export const StyledButton = styled.button`
     vertical-align: middle;
     text-decoration: none;
     font-size: inherit;
-    font-family: ${({ theme }) => theme.typography.primary.fontFamily};    font-weight: 800;
-    color: #1A0000;
+    font-family: ${({ theme }) => theme.typography.primary.fontFamily};
+    font-weight: 800;
+    color: ${({ theme }) => theme.palette.black.primary};
     text-transform: uppercase;
     padding: 1em 1.5em;
-    background: #F5EDCE;
-    border: 2px solid #1A0000;
+    background: ${({ theme }) => theme.palette.light.primary};
+    border: 2px solid ${({ theme }) => theme.palette.black.primary};
     border-radius: 0.75em;
     transform-style: preserve-3d;
     transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
@@ -29,30 +30,60 @@ export const StyledButton = styled.button`
         left: 0;
         right: 0;
         bottom: 0;
-        background: #7AA3C1;
+        background: ${({ theme }) => theme.palette.dark.primary};
         border-radius: inherit;
-        box-shadow: 0 0 0 2px #1A0000;
+        box-shadow: 0 0 0 2px ${({ theme }) => theme.palette.black.primary};
         transform: translate3d(0, 0.75em, -1em);
         transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
     }
 
     &:hover {
-        background: #89C4E1;
+        background: ${({ theme }) => theme.palette.mid.primary};
         transform: translate(0, 0.25em);
 
         &::before {
-            box-shadow: 0 0 0 2px #1A0000;
+            box-shadow: 0 0 0 2px ${({ theme }) => theme.palette.black.primary};
             transform: translate3d(0, 0.5em, -1em);
         }
     }
 
     &:active {
-        background: #89C4E1;
+        background: ${({ theme }) => theme.palette.mid.primary};
         transform: translate(0em, 0.75em);
 
         &::before {
-            box-shadow: 0 0 0 2px #1A0000;
+            box-shadow: 0 0 0 2px ${({ theme }) => theme.palette.black.primary};
             transform: translate3d(0, 0, -1em);
         }
     }
 `;
+
+export const StyledCheckbox = styled.label`
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 0.5em;
+    font-family: ${({ theme }) => theme.typography.secondary.fontFamily};
+
+    input {
+        appearance: none;
+        margin-right: 0.5em;
+    }
+
+    input:checked + span {
+        font-style: italic;
+        color: ${({ theme }) => theme.palette.dark.primary};
+        text-decoration: line-through;
+    }
+
+    input::before {
+        content: '\\e835';
+        color: ${({ theme }) => theme.palette.black.primary};
+    }
+
+    input:checked::before {
+        content: '\\e834';
+        color: ${({ theme }) => theme.palette.dark.primary};
+    }
+`;
+

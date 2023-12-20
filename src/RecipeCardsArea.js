@@ -30,7 +30,7 @@ const RecipeCardsArea = ({ currentCategory }) => {
     // ...
 
     return (
-        <Grid container spacing={3} sx={{ padding: '1em', backgroundColor: theme.palette.light.primary }}>
+        <Grid container spacing={3} sx={{ padding: '2em', backgroundColor: theme.palette.light.primary }}>
             {displayRecipes.map((recipe, index) => (
                 <Grid item xs={12} sm={4} md={3} key={index}>
                     <RecipeCard {...recipe} />
