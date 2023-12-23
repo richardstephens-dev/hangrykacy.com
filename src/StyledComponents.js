@@ -3,7 +3,9 @@ import { useTheme } from '@mui/material';
 
 export const StyledButton = styled.button`
     position: relative;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     cursor: pointer;
     outline: none;
     border: 0;
@@ -11,10 +13,9 @@ export const StyledButton = styled.button`
     text-decoration: none;
     font-size: inherit;
     font-family: ${({ theme }) => theme.typography.primary.fontFamily};
-    font-weight: 800;
+    font-weight: 600;
     color: ${({ theme }) => theme.palette.black.primary};
     text-transform: uppercase;
-    padding: 1em 1.5em;
     background: ${({ theme }) => theme.palette.light.primary};
     border: 2px solid ${({ theme }) => theme.palette.black.primary};
     border-radius: 0.75em;
