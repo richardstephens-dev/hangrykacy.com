@@ -1,5 +1,5 @@
 {
-    "editor.formatOnSave": true,
-    "editor.formatOnPaste": true,
-    "eslint.format.enable": true
+    "css.validate": false,
+    "less.validate": false,
+    "scss.validate": false
 }
