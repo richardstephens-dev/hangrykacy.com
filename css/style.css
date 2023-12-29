@@ -44,7 +44,7 @@ em {
 
 /* section dividers */
 section {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 
 /* recipe title */
@@ -277,6 +277,9 @@ pre {
   #ingredients, #steps {
     float: left;
   }
+  #source {
+    float: right
+  }
   #ingredients {
     width:         33%;
     padding-right: 2em;
@@ -413,4 +416,30 @@ pre {
     align-items: center;
     width: 100%; /* Ensures the container spans the full width */
     padding: 0 10px; /* Add padding on the sides */
+}
+
+#recipe-info .info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#recipe-info svg {
+  /* Add styles for your SVGs here */
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.info-label {
+  font-weight: bold;
+}
+
+.info-data {
+  margin-left: 5px;
+}
+
+.icon {
+  max-width: 1em;
+  margin-right: 0.5em;
 }

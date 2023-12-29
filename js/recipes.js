@@ -28,10 +28,16 @@ const recipeApp = (function() {
             $('#header-title-1').hide();
             $('#header-title-2').hide();
             $('#header-logo').hide();
+            $('#source').show();
+            $('#substitutions').hide();
+            $('#recipe-info').show();
         } else {
             $('#header-title-1').show();
             $('#header-title-2').show();
             $('#header-logo').show();
+            $('#source').hide();
+            $('#substitutions').show();
+            $('#recipe-info').hide();
         }
     }
 
@@ -58,12 +64,34 @@ const recipeApp = (function() {
         $('#toc ul').hide();
     
         // Display the recipe details
-        $('#heroimage').html('<img src="' + recipe["Photo"] + '" alt="Image of ' + recipe["Recipe Title"] + '">');
         $('#title').html('<h2>' + recipe["Recipe Title"] + '</h2>');
-    
-        // Process the ingredients to include checkboxes, subheadings, and ignore empty lines
+        let recipeInfoHtml = `
+        <div id="prep-time" class="info-item">
+            <img class="icon" src="images/prep_time.svg" />
+            <span class="info-label">Prep Time:</span>
+            <span class="info-data">${recipe["Prep Time"] || 'N/A'}</span>
+        </div>
+        <div id="cook-time" class="info-item">
+        <img class="icon" src="images/cook_time.svg" />
+        <span class="info-label">Cook Time:</span>
+            <span class="info-data">${recipe["Cook Time"] || 'N/A'}</span>
+        </div>
+        <div id="total-time" class="info-item">
+        <img class="icon" src="images/total_time.svg" />
+        <span class="info-label">Total Time:</span>
+            <span class="info-data">${recipe["Total Time"] || 'N/A'}</span>
+        </div>
+        <div id="servings" class="info-item">
+        <img class="icon" src="images/servings.svg" />
+        <span class="info-label">Servings:</span>
+            <span class="info-data">${recipe["Servings"] || 'N/A'}</span>
+        </div>
+    `;
+    $('#recipe-info').html(recipeInfoHtml).show();
         let ingredientsHtml = recipe["Ingredients"].split('\n').map((ingredient, idx) => {
-            if (ingredient.endsWith(':')) {
+            if (ingredient.trim() === '') {
+                return ''; // Skip empty lines
+            } else if (ingredient.endsWith(':')) {
                 return `<li class="ingredient-subheading">${ingredient}</li>`; // Add class for subheadings
             } else {
                 return `<li>
@@ -73,7 +101,7 @@ const recipeApp = (function() {
                             </label>
                         </li>`;
             }
-        }).join('');    
+        }).join('');
         let stepsHtml = recipe["Steps"].split('\n').map(step => {
             if (step.endsWith(':')) {
                 return `<li class="step-subheading">${step}</li>`;
@@ -81,6 +109,21 @@ const recipeApp = (function() {
                 return `<li><p class="step">${step}</p></li>`;
             }
         }).join('');
+
+        if (recipe["Substitutions"] && recipe["Substitutions"].trim() !== '') {
+            let substitutionsHtml = `<h3>Substitutions</h3><p>${recipe["Substitutions"]}</p>`;
+            $('#substitutions').html(substitutionsHtml).show();
+        } else {
+            $('#substitutions').empty().hide();
+        }
+
+        if (recipe["Source"] && recipe["Source"].trim() !== '') {
+            let sourceHtml = `<h3><a href="${recipe["Source"]}" target="_blank">Recipe Source</a></h3>`;
+            $('#source').html(sourceHtml).show();
+        } else {
+            $('#source').empty().hide();
+        }
+
         $('#title').show();
         $('#ingredients').show();
         $('#steps').show();
@@ -109,7 +152,7 @@ const recipeApp = (function() {
         $('#toc h3').show();
         // Clear and hide the recipe details sections
         $('#title').empty().hide();
-        $('#info').empty().hide();
+        $('#recipe-info').empty().hide();
         $('#ingredients').empty().hide();
         $('#steps').empty().hide();
         $('#notes').empty().hide();
