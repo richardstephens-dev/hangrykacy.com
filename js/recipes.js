@@ -3,14 +3,14 @@ const recipeApp = (function() {
 
     function slugify(text) {
         return text.toString().toLowerCase()
-            .replace(/\s+/g, '-')           // Replace spaces with -
-            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-            .replace(/\-\-+/g, '-');        // Replace multiple - with single -
+            .replace(/\s+/g, '-') // Replace spaces with -
+            .replace(/[^\w\-]+/g, '') // Remove all non-word chars
+            .replace(/\-\-+/g, '-'); // Replace multiple - with single -
     }
-    
+
     function groupRecipesByCategory(recipes) {
         const groupedRecipes = {};
-    
+
         recipes.forEach(recipe => {
             const category = recipe["Category"];
             if (!groupedRecipes[category]) {
@@ -18,10 +18,16 @@ const recipeApp = (function() {
             }
             groupedRecipes[category].push(recipe);
         });
-    
-        return groupedRecipes;
+
+        const sortedGroupedRecipes = Object.keys(groupedRecipes)
+            .sort()
+            .reduce((acc, category) => {
+                acc[category] = groupedRecipes[category];
+                return acc;
+            }, {});
+
+        return sortedGroupedRecipes;
     }
-    
 
     function updateHeader(isRecipePage) {
         if (isRecipePage) {
@@ -41,29 +47,26 @@ const recipeApp = (function() {
         }
     }
 
+
     function processRecipes() {
         const groupedRecipes = groupRecipesByCategory(jsonData);
         let contentHtml = '';
-    
+
         for (const category in groupedRecipes) {
-            contentHtml += '<h3>' + category + '</h3><ul>';
+            contentHtml += '<div class="category"><h3>' + category + '</h3><ul>';
             groupedRecipes[category].forEach(recipe => {
                 contentHtml += '<li><a href="javascript:void(0);" data-index="' + jsonData.indexOf(recipe) + '">' + recipe["Recipe Title"] + '</a></li>';
             });
-            contentHtml += '</ul>';
+            contentHtml += '</ul></div>';
         }
-    
+
         $('#toc').html(contentHtml);
     }
-    
 
     function displayRecipeDetails(index) {
         let recipe = jsonData[index];
-    
-        // Hide all other recipes
+
         $('#toc ul').hide();
-    
-        // Display the recipe details
         $('#title').html('<h2>' + recipe["Recipe Title"] + '</h2>');
         let recipeInfoHtml = `
         <div id="prep-time" class="info-item">
@@ -87,12 +90,12 @@ const recipeApp = (function() {
             <span class="info-data">${recipe["Servings"] || 'N/A'}</span>
         </div>
     `;
-    $('#recipe-info').html(recipeInfoHtml).show();
+        $('#recipe-info').html(recipeInfoHtml).show();
         let ingredientsHtml = recipe["Ingredients"].split('\n').map((ingredient, idx) => {
             if (ingredient.trim() === '') {
-                return ''; // Skip empty lines
+                return '';
             } else if (ingredient.endsWith(':')) {
-                return `<li class="ingredient-subheading">${ingredient}</li>`; // Add class for subheadings
+                return `<li class="subheading">${ingredient}</li>`;
             } else {
                 return `<li>
                             <label class="styled-checkbox">
@@ -102,13 +105,18 @@ const recipeApp = (function() {
                         </li>`;
             }
         }).join('');
-        let stepsHtml = recipe["Steps"].split('\n').map(step => {
-            if (step.endsWith(':')) {
-                return `<li class="step-subheading">${step}</li>`;
+        let stepsArray = recipe["Steps"].trimStart().split('\n');
+
+        let stepsHtml = stepsArray.reduce((acc, step, index, array) => {
+            if (step.endsWith(':') && index + 1 < array.length) {
+                array[index + 1] = (step + ' ' + array[index + 1]).trimEnd()
             } else if (step.trim() !== '') {
-                return `<li><p class="step">${step}</p></li>`;
+                acc += `<li><p class="step">${step}</p></li>`
             }
-        }).join('');
+            return acc;
+        }, '');
+
+
 
         if (recipe["Substitutions"] && recipe["Substitutions"].trim() !== '') {
             let substitutionsHtml = `<h3>Substitutions</h3><p>${recipe["Substitutions"]}</p>`;
@@ -127,7 +135,7 @@ const recipeApp = (function() {
         $('#title').show();
         $('#ingredients').show();
         $('#steps').show();
-        $('#steps').html('<ul>' + stepsHtml + '</ul>');
+        $('#substitutions').show();
         $('#ingredients').html('<h3>Ingredients</h3><ul>' + ingredientsHtml + '</ul>');
         $('#steps').html('<h3>Steps</h3><ul>' + stepsHtml + '</ul>');
         $('#details').html(`
@@ -140,30 +148,29 @@ const recipeApp = (function() {
         $('#toc h3').hide();
         updateHeader(true);
         const slug = slugify(recipe["Recipe Title"]);
-        history.pushState({index: index}, recipe["Recipe Title"], '?recipe=' + slug);
+        history.pushState({
+            index: index
+        }, recipe["Recipe Title"], '?recipe=' + slug);
     }
-    
-    
-    
+
+
+
 
     function showRecipeList() {
-        // Show the list of recipes again
         $('#toc ul').show();
         $('#toc h3').show();
-        // Clear and hide the recipe details sections
         $('#title').empty().hide();
         $('#recipe-info').empty().hide();
         $('#ingredients').empty().hide();
         $('#steps').empty().hide();
         $('#notes').empty().hide();
         $('#substitutions').empty().hide();
-    
-        // Optional: Clear the 'details' section if you used it for the back button
+
         $('#details').empty();
         history.pushState(null, null, window.location.pathname);
         updateHeader(false);
     }
-    
+
 
     function attachRecipeClickHandler() {
         $(document).off('click', '#toc ul li a').on('click', '#toc ul li a', function() {
@@ -172,7 +179,6 @@ const recipeApp = (function() {
         });
     }
 
-    // Call this once when the script loads
     attachRecipeClickHandler();
 
     return {

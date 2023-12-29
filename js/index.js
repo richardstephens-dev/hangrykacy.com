@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
             recipeApp.setJsonData(data);
             recipeApp.processRecipes();
 
-            // Check URL to see if a specific recipe should be displayed
             const params = new URLSearchParams(window.location.search);
             const recipeSlug = params.get('recipe');
             if (recipeSlug) {
@@ -18,10 +17,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error fetching data: ', error);
         });
-    
-    // Handle browser navigation events
+
     window.onpopstate = function(event) {
-        if(event.state && event.state.index !== undefined) {
+        if (event.state && event.state.index !== undefined) {
             recipeApp.displayRecipeDetails(event.state.index);
         } else {
             recipeApp.showRecipeList();
